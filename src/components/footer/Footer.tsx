@@ -1,0 +1,104 @@
+import type { ReactNode } from 'react'
+import { footer } from '../../config/content'
+import { site } from '../../config/site'
+import { Logo } from '../brand/Logo'
+import { Instagram, Mail, XLogo } from '../ui/Icons'
+import { WaitlistForm } from '../waitlist/WaitlistForm'
+
+/** Renders a real link when configured; otherwise a clearly non-interactive label (no invented URLs). */
+function MaybeLink({ href, children, external, label }: { href?: string; children: ReactNode; external?: boolean; label?: string }) {
+  const cls = 'text-[15px] text-white/75 transition-colors hover:text-white'
+  if (!href) {
+    return (
+      <span aria-disabled="true" title="Coming soon" aria-label={label} className="text-[15px] text-white/35">
+        {children}
+      </span>
+    )
+  }
+  return (
+    <a href={href} aria-label={label} className={cls} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+      {children}
+    </a>
+  )
+}
+
+export function Footer() {
+  const { links, contactEmail } = site
+  const social = [
+    { label: 'Instagram', href: links.instagram, icon: <Instagram size={20} /> },
+    { label: 'X', href: links.x, icon: <XLogo size={18} /> },
+    { label: 'Email', href: contactEmail ? `mailto:${contactEmail}` : '', icon: <Mail size={20} /> },
+  ]
+
+  return (
+    <footer className="relative border-t border-white/[0.06] px-5 pb-12 pt-20 md:px-10">
+      <div className="mx-auto grid max-w-[1560px] gap-14 lg:grid-cols-[1.1fr_1.2fr] lg:px-[7%]">
+        <div>
+          <Logo className="mb-8" />
+          <p className="mb-4 text-[16px] font-medium">Join our waitlist</p>
+          <WaitlistForm variant="compact" idPrefix="ft" />
+          <div className="mt-6 flex items-center gap-5">
+            {social.map((s) => (
+              <MaybeLink key={s.label} href={s.href} external={!s.href.startsWith('mailto:')} label={s.label}>
+                <span className="grid size-6 place-items-center">{s.icon}</span>
+              </MaybeLink>
+            ))}
+          </div>
+        </div>
+
+        <nav aria-label="Footer" className="grid grid-cols-2 gap-10 sm:grid-cols-3">
+          <div>
+            <h4 className="mb-4 text-[16px] font-medium">Company</h4>
+            <ul className="space-y-2.5">
+              {footer.company.map((l) => (
+                <li key={l.label}>
+                  <a href={l.href} className="text-[15px] text-white/75 transition-colors hover:text-white">
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h4 className="mb-4 text-[16px] font-medium">Legal</h4>
+            <ul className="space-y-2.5">
+              <li>
+                <MaybeLink href={links.privacy}>Privacy Policy</MaybeLink>
+              </li>
+              <li>
+                <MaybeLink href={links.terms}>Terms of Use</MaybeLink>
+              </li>
+              <li>
+                <MaybeLink href={contactEmail ? `mailto:${contactEmail}` : ''}>Contact &amp; support</MaybeLink>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="mb-4 text-[16px] font-medium">Social</h4>
+            <ul className="space-y-2.5">
+              <li>
+                <MaybeLink href={links.instagram} external>
+                  Instagram
+                </MaybeLink>
+              </li>
+              <li>
+                <MaybeLink href={links.x} external>
+                  X
+                </MaybeLink>
+              </li>
+              <li>
+                <MaybeLink href={links.linkedin} external>
+                  LinkedIn
+                </MaybeLink>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+
+      <p className="mx-auto mt-16 max-w-[1560px] text-[13px] text-white/40 lg:px-[7%]">
+        © {site.year} {site.name}. All rights reserved.
+      </p>
+    </footer>
+  )
+}
