@@ -117,7 +117,7 @@ function AiCard() {
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="absolute inset-[-28px] rounded-full bg-white/10 blur-2xl" />
           <img
-            src="/img/mascot.webp"
+            src="img/mascot.webp"
             alt=""
             width={150}
             height={150}

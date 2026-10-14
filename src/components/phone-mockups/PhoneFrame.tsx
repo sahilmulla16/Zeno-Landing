@@ -63,7 +63,7 @@ export function PhoneFrame({ screens, active = 0, width = '320px', glow = true, 
 }
 
 export const SCREENS = {
-  home: { src: '/img/screen-home.webp', alt: 'Zeno home screen with wallet card and latest transactions' },
-  budget: { src: '/img/screen-budget.webp', alt: 'Zeno budgets screen showing a spending donut chart for October' },
-  ai: { src: '/img/screen-ai.webp', alt: 'Zeno AI assistant ready to answer questions about your money' },
+  home: { src: 'img/screen-home.webp', alt: 'Zeno home screen with wallet card and latest transactions' },
+  budget: { src: 'img/screen-budget.webp', alt: 'Zeno budgets screen showing a spending donut chart for October' },
+  ai: { src: 'img/screen-ai.webp', alt: 'Zeno AI assistant ready to answer questions about your money' },
 } satisfies Record<string, ScreenShot>

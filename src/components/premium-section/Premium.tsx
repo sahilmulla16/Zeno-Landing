@@ -12,7 +12,7 @@ function Artwork() {
     <div aria-hidden="true" className="relative mx-auto aspect-square w-full max-w-[560px]">
       <div className="absolute inset-[6%] rounded-full bg-[radial-gradient(closest-side,rgb(124_58_237/0.40),rgb(236_72_153/0.16)_55%,transparent_76%)]" />
       <img
-        src="/img/mascot.webp"
+        src="img/mascot.webp"
         alt=""
         width={420}
         height={420}

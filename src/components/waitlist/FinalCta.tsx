@@ -36,7 +36,7 @@ export function FinalCta() {
 
         <div className="pointer-events-none relative z-0 mx-auto -mb-[22%] mt-6 w-[min(420px,80%)] md:absolute md:bottom-[-18%] md:right-[3%] md:mb-0 md:mt-0 md:w-[min(500px,38%)]">
           <img
-            src="/img/hand-budget.webp"
+            src="img/hand-budget.webp"
             alt="A hand holding a phone showing Zeno’s budgets screen"
             width={1024}
             height={1536}

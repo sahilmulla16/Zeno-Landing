@@ -65,7 +65,7 @@ export function Hero() {
 
       <div ref={art} className="relative z-10 mx-auto -mt-[4vh] w-full md:w-[min(1000px,112%)] px-2 md:-mt-[8vh]">
         <img
-          src="/img/hand-home.webp"
+          src="img/hand-home.webp"
           alt="A hand holding a phone showing the Zeno home screen with wallet and latest transactions"
           width={1024}
           height={1536}

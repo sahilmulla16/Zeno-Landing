@@ -114,7 +114,7 @@ function Chips() {
 const VISUALS: ReactNode[] = [
   <Fragment key="bow">
     <BowTie />
-    <img src="/img/mascot.webp" alt="" width={110} height={110} loading="lazy" className="absolute left-1/2 top-1/2 size-[104px] -translate-x-1/2 -translate-y-1/2 object-contain" />
+    <img src="img/mascot.webp" alt="" width={110} height={110} loading="lazy" className="absolute left-1/2 top-1/2 size-[104px] -translate-x-1/2 -translate-y-1/2 object-contain" />
   </Fragment>,
   <Donut key="donut" />,
   <Bars key="bars" />,
