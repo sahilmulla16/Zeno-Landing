@@ -8,52 +8,117 @@ const ICONS = { zap: Zap, target: Target, chart: Chart, sparkle: Sparkle }
 const SCREEN_LIST = [SCREENS.home, SCREENS.budget, SCREENS.ai]
 
 /**
- * Desktop: the phone is CSS-`sticky` in the right column while the statements scroll past on the left;
+ * Desktop: The phone is CSS-`sticky` in the right column while the statements scroll past on the left;
  * the active statement brightens and the phone cross-fades to the matching Zeno screen.
- * The pin releases naturally when the section ends. Mobile: each statement carries its own phone.
+ *
+ * Mobile: Pinned walkthrough experience. The phone stays pinned in the viewport with responsive clamping
+ * (never feeling congested or oversized) while the active feature title, icon badge, and screen cross-fade
+ * in perfect synchronization with scroll progression and interactive step pills.
  */
 export function ShowcasePinned() {
   const root = useRef<HTMLElement>(null)
   const [active, setActive] = useState(0)
+  const touchStartX = useRef<number | null>(null)
+
+  const screenIndex = (key: 'home' | 'budget' | 'ai') => SCREEN_LIST.indexOf(SCREENS[key])
+  const shown = screenIndex(showcase[active].screen)
+  const ActiveIcon = ICONS[showcase[active].icon]
+
+  function scrollToStep(i: number) {
+    setActive(i)
+    const mobileTriggers = root.current?.querySelectorAll<HTMLElement>('[data-statement-mobile]')
+    if (mobileTriggers && mobileTriggers[i]) {
+      mobileTriggers[i].scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null) return
+    const diffX = touchStartX.current - e.changedTouches[0].clientX
+    if (Math.abs(diffX) > 44) {
+      if (diffX > 0 && active < showcase.length - 1) {
+        scrollToStep(active + 1)
+      } else if (diffX < 0 && active > 0) {
+        scrollToStep(active - 1)
+      }
+    }
+    touchStartX.current = null
+  }
 
   useLayoutEffect(() => {
     const triggers: ScrollTrigger[] = []
-    const items = root.current?.querySelectorAll<HTMLElement>('[data-statement]') ?? []
-    items.forEach((el, i) => {
+
+    // 1. Desktop triggers
+    const desktopItems = root.current?.querySelectorAll<HTMLElement>('[data-statement-desktop]') ?? []
+    desktopItems.forEach((el, i) => {
       triggers.push(
         ScrollTrigger.create({
           trigger: el,
           start: 'top 62%',
           end: 'bottom 62%',
+          invalidateOnRefresh: true,
           onToggle: (self) => self.isActive && setActive(i),
         }),
       )
     })
+
+    // 2. Mobile scroll checkpoints
+    const mobileItems = root.current?.querySelectorAll<HTMLElement>('[data-statement-mobile]') ?? []
+    mobileItems.forEach((el, i) => {
+      triggers.push(
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top 55%',
+          end: 'bottom 55%',
+          invalidateOnRefresh: true,
+          onToggle: (self) => self.isActive && setActive(i),
+        }),
+      )
+    })
+
     if (!prefersReducedMotion()) {
       const ctx = gsap.context(() => {
+        // Desktop phone entrance
         gsap.from('[data-phone-wrap]', {
           y: 140,
           opacity: 0,
           duration: 1.2,
           ease: 'power3.out',
           clearProps: 'opacity,transform',
-          scrollTrigger: { trigger: root.current, start: 'top 70%', once: true },
+          scrollTrigger: { trigger: root.current, start: 'top 70%', once: true, invalidateOnRefresh: true },
+        })
+
+        // Mobile phone entrance
+        gsap.from('[data-phone-wrap-mobile]', {
+          y: 60,
+          scale: 0.94,
+          opacity: 0,
+          duration: 1,
+          ease: 'power3.out',
+          clearProps: 'opacity,transform',
+          scrollTrigger: { trigger: root.current, start: 'top 75%', once: true, invalidateOnRefresh: true },
         })
       }, root)
+
       return () => {
         triggers.forEach((t) => t.kill())
         ctx.revert()
       }
     }
+
     return () => triggers.forEach((t) => t.kill())
   }, [])
 
-  const screenIndex = (key: 'home' | 'budget' | 'ai') => SCREEN_LIST.indexOf(SCREENS[key])
-  const shown = screenIndex(showcase[active].screen)
-
   return (
-    <section ref={root} aria-label="Zeno feature walkthrough" className="relative overflow-x-clip px-5 md:px-10">
-      <div className="mx-auto grid max-w-[1560px] gap-x-10 lg:grid-cols-[1.05fr_1fr]">
+    <section ref={root} aria-label="Zeno feature walkthrough" className="relative px-5 md:px-10">
+      {/* ------------------------------------------------------------- */}
+      {/* DESKTOP EXPERIENCE (lg:grid): Original 2-column pinned layout */}
+      {/* ------------------------------------------------------------- */}
+      <div className="mx-auto hidden max-w-[1560px] gap-x-10 lg:grid lg:grid-cols-[1.05fr_1fr]">
         <ol className="relative z-10 list-none">
           {showcase.map((s, i) => {
             const Icon = ICONS[s.icon]
@@ -61,10 +126,10 @@ export function ShowcasePinned() {
             return (
               <li
                 key={s.title}
-                data-statement
+                data-statement-desktop
                 className="flex min-h-[78vh] items-center py-10 lg:pl-[8%]"
               >
-                <div className="flex w-full flex-col gap-8 lg:flex-row lg:items-start lg:gap-5">
+                <div className="flex w-full items-start gap-5">
                   <span
                     aria-hidden="true"
                     className={`mt-2 grid size-11 shrink-0 place-items-center rounded-full border border-white/20 bg-[radial-gradient(circle_at_30%_30%,rgb(139_92_246/0.5),rgb(20_20_30))] text-amber-200 transition-opacity duration-700 ${
@@ -81,10 +146,6 @@ export function ShowcasePinned() {
                     >
                       {s.title}
                     </h3>
-                    {/* mobile-only inline phone */}
-                    <div className="mt-10 flex justify-center lg:hidden">
-                      <PhoneFrame screens={[SCREENS[s.screen]]} width="min(260px,66vw)" />
-                    </div>
                   </div>
                 </div>
               </li>
@@ -92,12 +153,96 @@ export function ShowcasePinned() {
           })}
         </ol>
 
-        <div className="hidden lg:block">
+        <div>
           <div className="sticky top-0 flex h-screen items-center justify-center">
             <div data-phone-wrap>
               <PhoneFrame screens={SCREEN_LIST} active={shown} width="min(380px, 40vh)" />
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* ------------------------------------------------------------- */}
+      {/* MOBILE EXPERIENCE (< lg): Pinned, non-congested, synced animation */}
+      {/* ------------------------------------------------------------- */}
+      <div className="relative block lg:hidden">
+        {/* Sticky viewport pinned while scrolling through the checkpoints */}
+        <div
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          className="sticky top-14 z-10 flex h-[calc(100dvh-3.5rem)] flex-col justify-between py-4 select-none"
+        >
+          {/* Top Section: Progress Tracker & Animated Statement */}
+          <div className="flex flex-col items-center text-center px-4">
+            {/* Step pill indicator */}
+            <div className="flex items-center gap-2 mb-2.5">
+              <span className="text-[11px] font-semibold tracking-wider text-violet-soft font-mono">
+                0{active + 1} / 0{showcase.length}
+              </span>
+              <div className="flex items-center gap-1.5 ml-1">
+                {showcase.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => scrollToStep(i)}
+                    aria-label={`Jump to feature ${i + 1}`}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      i === active
+                        ? 'w-7 bg-violet-soft shadow-[0_0_12px_rgba(167,139,250,0.8)]'
+                        : 'w-2 bg-white/20 hover:bg-white/40'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Active Statement with animated fade-in */}
+            <div
+              key={active}
+              className="flex flex-col items-center animate-in fade-in slide-in-from-bottom-2 duration-300"
+            >
+              <span
+                aria-hidden="true"
+                className="mb-2 grid size-10 place-items-center rounded-full border border-white/20 bg-[radial-gradient(circle_at_30%_30%,rgb(139_92_246/0.5),rgb(20_20_30))] text-amber-200 shadow-[0_0_20px_rgba(139,92,246,0.35)]"
+              >
+                <ActiveIcon size={19} />
+              </span>
+              <h3 className="max-w-[340px] text-[19px] sm:text-[22px] font-semibold leading-tight tracking-tight text-white min-h-[48px] flex items-center justify-center">
+                {showcase[active].title}
+              </h3>
+            </div>
+          </div>
+
+          {/* Center Section: Titanium-frame phone with ambient glow & responsive clamp */}
+          <div
+            data-phone-wrap-mobile
+            className="my-auto flex items-center justify-center px-4 transition-transform duration-500"
+          >
+            <PhoneFrame
+              screens={SCREEN_LIST}
+              active={shown}
+              width="min(210px, 42vh, 52vw)"
+              priority={true}
+            />
+          </div>
+
+          {/* Bottom Section: Subtle interaction cue */}
+          <div className="flex items-center justify-center gap-1.5 text-[11px] text-white/40 pb-1">
+            <span>Scroll or swipe to explore</span>
+            <span className="animate-bounce">↓</span>
+          </div>
+        </div>
+
+        {/* Scroll trigger checkpoints driving the sticky progression */}
+        <div className="-mt-[calc(100dvh-3.5rem)] pointer-events-none">
+          {showcase.map((s) => (
+            <div
+              key={s.title}
+              data-statement-mobile
+              className="h-[75vh]"
+              aria-hidden="true"
+            />
+          ))}
         </div>
       </div>
     </section>

@@ -37,8 +37,15 @@ export function Navbar() {
   useEffect(() => {
     if (!open) return
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    const onResize = () => {
+      if (window.innerWidth >= 768) setOpen(false)
+    }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener('resize', onResize)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('resize', onResize)
+    }
   }, [open])
 
   return (
@@ -53,13 +60,13 @@ export function Navbar() {
       >
         <Logo />
 
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-5 md:flex lg:gap-8">
           {navLinks.map((l) => (
             <li key={l.href}>
               <a
                 href={l.href}
                 aria-current={active === l.href ? 'true' : undefined}
-                className={`text-[15px] font-semibold transition-colors duration-300 hover:text-white ${
+                className={`text-[14px] font-semibold transition-colors duration-300 hover:text-white lg:text-[15px] ${
                   active === l.href ? 'text-white' : 'text-white/70'
                 }`}
               >
@@ -68,7 +75,7 @@ export function Navbar() {
             </li>
           ))}
           <li>
-            <Button href="#waitlist" className="!h-[54px] !px-8 !text-[17px]">
+            <Button href="#waitlist" className="!h-[48px] !px-5 text-[15px] lg:!h-[54px] lg:!px-8 lg:text-[17px]">
               Join Waitlist
             </Button>
           </li>

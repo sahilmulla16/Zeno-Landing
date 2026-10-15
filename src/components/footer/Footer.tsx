@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 import { footer } from '../../config/content'
 import { site } from '../../config/site'
+import { Link, useRouter } from '../../lib/router'
 import { Logo } from '../brand/Logo'
-import { Instagram, Mail, XLogo } from '../ui/Icons'
-import { WaitlistForm } from '../waitlist/WaitlistForm'
+import { Instagram, Mail, Threads } from '../ui/Icons'
 
 /** Renders a real link when configured; otherwise a clearly non-interactive label (no invented URLs). */
 function MaybeLink({ href, children, external, label }: { href?: string; children: ReactNode; external?: boolean; label?: string }) {
@@ -23,10 +23,11 @@ function MaybeLink({ href, children, external, label }: { href?: string; childre
 }
 
 export function Footer() {
+  const { path } = useRouter()
   const { links, contactEmail } = site
   const social = [
     { label: 'Instagram', href: links.instagram, icon: <Instagram size={20} /> },
-    { label: 'X', href: links.x, icon: <XLogo size={18} /> },
+    { label: 'Threads', href: links.threads, icon: <Threads size={18} /> },
     { label: 'Email', href: contactEmail ? `mailto:${contactEmail}` : '', icon: <Mail size={20} /> },
   ]
 
@@ -34,10 +35,8 @@ export function Footer() {
     <footer className="relative border-t border-white/[0.06] px-5 pb-12 pt-20 md:px-10">
       <div className="mx-auto grid max-w-[1560px] gap-14 lg:grid-cols-[1.1fr_1.2fr] lg:px-[7%]">
         <div>
-          <Logo className="mb-8" />
-          <p className="mb-4 text-[16px] font-medium">Join our waitlist</p>
-          <WaitlistForm variant="compact" idPrefix="ft" />
-          <div className="mt-6 flex items-center gap-5">
+          <Logo className="mb-6" />
+          <div className="flex items-center gap-5">
             {social.map((s) => (
               <MaybeLink key={s.label} href={s.href} external={!s.href.startsWith('mailto:')} label={s.label}>
                 <span className="grid size-6 place-items-center">{s.icon}</span>
@@ -50,26 +49,35 @@ export function Footer() {
           <div>
             <h4 className="mb-4 text-[16px] font-medium">Company</h4>
             <ul className="space-y-2.5">
-              {footer.company.map((l) => (
-                <li key={l.label}>
-                  <a href={l.href} className="text-[15px] text-white/75 transition-colors hover:text-white">
-                    {l.label}
-                  </a>
-                </li>
-              ))}
+              {footer.company.map((l) => {
+                const targetHref = path === '/' ? l.href : `/${l.href}`
+                return (
+                  <li key={l.label}>
+                    <Link href={targetHref} className="text-[15px] text-white/75 transition-colors hover:text-white">
+                      {l.label}
+                    </Link>
+                  </li>
+                )
+              })}
             </ul>
           </div>
           <div>
             <h4 className="mb-4 text-[16px] font-medium">Legal</h4>
             <ul className="space-y-2.5">
               <li>
-                <MaybeLink href={links.privacy}>Privacy Policy</MaybeLink>
+                <Link href="/privacy" className="text-[15px] text-white/75 transition-colors hover:text-white">
+                  Privacy Policy
+                </Link>
               </li>
               <li>
-                <MaybeLink href={links.terms}>Terms of Use</MaybeLink>
+                <Link href="/terms" className="text-[15px] text-white/75 transition-colors hover:text-white">
+                  Terms of Use
+                </Link>
               </li>
               <li>
-                <MaybeLink href={contactEmail ? `mailto:${contactEmail}` : ''}>Contact &amp; support</MaybeLink>
+                <Link href="/support" className="text-[15px] text-white/75 transition-colors hover:text-white">
+                  Contact &amp; Support
+                </Link>
               </li>
             </ul>
           </div>
@@ -82,8 +90,8 @@ export function Footer() {
                 </MaybeLink>
               </li>
               <li>
-                <MaybeLink href={links.x} external>
-                  X
+                <MaybeLink href={links.threads} external>
+                  Threads
                 </MaybeLink>
               </li>
               <li>

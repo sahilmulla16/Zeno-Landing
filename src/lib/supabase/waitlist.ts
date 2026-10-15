@@ -1,6 +1,6 @@
 import { site } from '../../config/site'
 import { getCampaign } from '../analytics/campaign'
-import { isValidEmail, normalizeEmail } from '../validation'
+import { isValidGmail, normalizeEmail } from '../validation'
 
 export type WaitlistErrorKind = 'invalid' | 'rate_limited' | 'not_configured' | 'network' | 'server'
 
@@ -22,7 +22,24 @@ export interface WaitlistInput {
   website?: string
 }
 
-export type WaitlistResult = 'created' | 'already_registered'
+export interface WaitlistResult {
+  status: 'created' | 'already_registered'
+  signupId?: string
+}
+
+let warmed = false
+
+/**
+ * Pre-warms the Edge Function via an OPTIONS ping so DNS, TLS handshake,
+ * and Deno worker are already awake before the user submits the form.
+ */
+export function warmupWaitlist(): void {
+  if (warmed || !site.waitlist.endpoint) return
+  warmed = true
+  fetch(site.waitlist.endpoint, { method: 'OPTIONS' }).catch(() => {
+    // Non-fatal background warmup
+  })
+}
 
 /**
  * Posts to the `waitlist-signup` Edge Function. The browser never talks to the table directly
@@ -31,7 +48,7 @@ export type WaitlistResult = 'created' | 'already_registered'
  */
 export async function submitWaitlist(input: WaitlistInput): Promise<WaitlistResult> {
   const email = normalizeEmail(input.email)
-  if (!isValidEmail(email)) throw new WaitlistError('invalid', 'Please enter a valid email address.')
+  if (!isValidGmail(email)) throw new WaitlistError('invalid', 'Please enter a valid Gmail address (@gmail.com).')
   if (!input.consent) throw new WaitlistError('invalid', 'Please confirm you agree to be emailed.')
   if (!site.waitlist.endpoint) {
     throw new WaitlistError('not_configured', 'The waitlist is not connected yet. Please try again later.')
@@ -68,7 +85,7 @@ export async function submitWaitlist(input: WaitlistInput): Promise<WaitlistResu
     throw new WaitlistError('network', 'Network error. Check your connection and try again.')
   }
 
-  let data: { ok?: boolean; status?: string; error?: string } = {}
+  let data: { ok?: boolean; status?: string; error?: string; signupId?: string } = {}
   try {
     data = (await res.json()) as typeof data
   } catch {
@@ -81,5 +98,8 @@ export async function submitWaitlist(input: WaitlistInput): Promise<WaitlistResu
   }
   if (!res.ok || !data.ok) throw new WaitlistError('server', 'Something went wrong on our side. Please try again.')
 
-  return data.status === 'already_registered' ? 'already_registered' : 'created'
+  return {
+    status: data.status === 'already_registered' ? 'already_registered' : 'created',
+    signupId: data.signupId,
+  }
 }

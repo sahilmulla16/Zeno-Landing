@@ -16,12 +16,29 @@ export const site = {
       (supabaseUrl ? `${supabaseUrl}/functions/v1/waitlist-signup` : ''),
     anonKey: (env.VITE_SUPABASE_ANON_KEY as string | undefined) ?? '',
   },
+  support: {
+    /** Supabase Edge Function that performs the secure support ticket insert. */
+    endpoint:
+      (env.VITE_SUPPORT_ENDPOINT as string | undefined) ||
+      (supabaseUrl ? `${supabaseUrl}/functions/v1/support-ticket` : ''),
+  },
+  research: {
+    /** Supabase Edge Function that stores user research responses. */
+    endpoint:
+      (env.VITE_RESEARCH_ENDPOINT as string | undefined) ||
+      (supabaseUrl ? `${supabaseUrl}/functions/v1/user-research` : ''),
+  },
   // TODO(config): set these in .env — see .env.example
   contactEmail: (env.VITE_CONTACT_EMAIL as string | undefined) ?? '',
   links: {
-    privacy: (env.VITE_PRIVACY_URL as string | undefined) ?? '',
-    terms: (env.VITE_TERMS_URL as string | undefined) ?? '',
+    privacy: '/privacy',
+    terms: '/terms',
+    support: '/support',
     instagram: (env.VITE_INSTAGRAM_URL as string | undefined) ?? '',
+    threads:
+      ((env.VITE_THREADS_URL as string | undefined) ||
+        (env.VITE_X_URL as string | undefined)) ??
+      '',
     x: (env.VITE_X_URL as string | undefined) ?? '',
     linkedin: (env.VITE_LINKEDIN_URL as string | undefined) ?? '',
   },

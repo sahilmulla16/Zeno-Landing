@@ -83,11 +83,11 @@ function Donut() {
 function Bars() {
   const h = [38, 56, 44, 78, 52, 92, 64, 48, 70]
   return (
-    <div className="absolute inset-0 flex items-end justify-center gap-3 px-16 pb-6" aria-hidden="true">
+    <div className="absolute inset-0 flex items-end justify-center gap-1.5 px-4 pb-6 sm:gap-3 sm:px-12" aria-hidden="true">
       {h.map((v, i) => (
         <span
           key={i}
-          className="w-6 rounded-t-lg bg-gradient-to-t from-violet/10 to-violet-soft"
+          className="w-4 sm:w-6 rounded-t-lg bg-gradient-to-t from-violet/10 to-violet-soft"
           style={{ height: `${v}%`, opacity: 0.45 + (i % 4) * 0.14 }}
         />
       ))}
@@ -98,11 +98,13 @@ function Bars() {
 function Chips() {
   const chips = ['Spending insights', 'Can I afford this?', 'Saving tips']
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3" aria-hidden="true">
-      <div className="rounded-2xl rounded-br-md bg-white/10 px-5 py-3 text-[15px] font-medium">Where did my money go this month?</div>
-      <div className="flex flex-wrap justify-center gap-2.5 px-8">
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-3" aria-hidden="true">
+      <div className="max-w-[90%] rounded-2xl rounded-br-md bg-white/10 px-3.5 py-2.5 text-center text-[13px] font-medium sm:px-5 sm:py-3 sm:text-[15px]">
+        Where did my money go this month?
+      </div>
+      <div className="flex flex-wrap justify-center gap-2 px-2 sm:gap-2.5 sm:px-8">
         {chips.map((c) => (
-          <span key={c} className="rounded-full border border-violet/40 bg-violet/10 px-4 py-2 text-[13px] font-semibold text-violet-soft">
+          <span key={c} className="rounded-full border border-violet/40 bg-violet/10 px-3 py-1.5 text-[12px] font-semibold text-violet-soft sm:px-4 sm:py-2 sm:text-[13px]">
             {c}
           </span>
         ))}

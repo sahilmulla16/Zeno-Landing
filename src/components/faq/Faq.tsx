@@ -27,7 +27,7 @@ function Item({ q, a, open, onToggle }: { q: string; a: string; open: boolean; o
         className={`grid transition-[grid-template-rows,opacity] duration-500 ease-out ${open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
       >
         <div className="overflow-hidden">
-          <p className="max-w-[760px] px-6 pb-6 pl-[3.6rem] text-[16px] leading-relaxed text-white/60">{a}</p>
+          <p className="max-w-[760px] px-6 pb-6 pl-6 sm:pl-[3.6rem] text-[15px] sm:text-[16px] leading-relaxed text-white/60">{a}</p>
         </div>
       </div>
     </div>

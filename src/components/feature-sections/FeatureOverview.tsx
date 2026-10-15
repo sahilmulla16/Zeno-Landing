@@ -16,38 +16,40 @@ const ORBIT = [
 
 function ExpenseCard() {
   return (
-    <article className="card h-full min-h-[412px] overflow-hidden p-8">
-      <h3 className="text-[26px] font-semibold tracking-[-0.02em]">{overview.expense.title}</h3>
-      <p className="mt-2 max-w-[420px] text-[18px] leading-snug text-white/55">{overview.expense.body}</p>
+    <article className="card flex h-full min-h-[412px] flex-col justify-between overflow-hidden p-6 xl:p-8 lg:min-h-[500px]">
+      <div>
+        <h3 className="text-[24px] sm:text-[26px] font-semibold tracking-[-0.02em]">{overview.expense.title}</h3>
+        <p className="mt-2 max-w-[420px] text-[16px] sm:text-[18px] leading-snug text-white/55">{overview.expense.body}</p>
+      </div>
 
       <div className="mt-8 space-y-3" aria-hidden="true">
-        <div className="relative flex items-center gap-4 rounded-2xl border border-violet/70 bg-[#120d22] p-3.5 shadow-[0_0_40px_-4px_rgba(139,92,246,0.55),inset_0_0_30px_rgba(139,92,246,0.18)]">
-          <span className="grid size-12 place-items-center rounded-xl bg-[#ff5a1f] text-white">
-            <Cup size={22} />
+        <div className="relative flex items-center gap-3.5 sm:gap-4 rounded-2xl border border-violet/70 bg-[#120d22] p-3 sm:p-3.5 shadow-[0_0_40px_-4px_rgba(139,92,246,0.55),inset_0_0_30px_rgba(139,92,246,0.18)]">
+          <span className="grid size-11 sm:size-12 shrink-0 place-items-center rounded-xl bg-[#ff5a1f] text-white">
+            <Cup size={20} />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-[19px] font-semibold leading-tight">Noodles</p>
-            <p className="truncate text-[14px] text-white/50">Food &amp; Drinks · Today · 10:09 PM</p>
+            <p className="truncate text-[17px] sm:text-[19px] font-semibold leading-tight">Noodles</p>
+            <p className="truncate text-[12px] sm:text-[14px] text-white/50">Food &amp; Drinks · Today · 10:09 PM</p>
           </div>
-          <p className="text-[18px] font-bold">-₹150</p>
+          <p className="shrink-0 text-[16px] sm:text-[18px] font-bold">-₹150</p>
         </div>
-        <div className="ml-4 flex items-center gap-4 rounded-2xl p-3 opacity-60">
-          <span className="grid size-11 place-items-center rounded-xl bg-[#34d3a8] text-[#06281f]">
-            <Car size={20} />
+        <div className="ml-2 sm:ml-4 flex items-center gap-3 sm:gap-4 rounded-2xl p-2.5 sm:p-3 opacity-60">
+          <span className="grid size-10 sm:size-11 shrink-0 place-items-center rounded-xl bg-[#34d3a8] text-[#06281f]">
+            <Car size={18} />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-[17px] font-semibold leading-tight">Uber</p>
-            <p className="truncate text-[13px] text-white/45">Transport · Today · 08:43 PM</p>
+            <p className="truncate text-[15px] sm:text-[17px] font-semibold leading-tight">Uber</p>
+            <p className="truncate text-[12px] sm:text-[13px] text-white/45">Transport · Today · 08:43 PM</p>
           </div>
-          <p className="text-[16px] font-bold">-₹220</p>
+          <p className="shrink-0 text-[15px] sm:text-[16px] font-bold">-₹220</p>
         </div>
-        <div className="ml-8 flex items-center gap-4 rounded-2xl p-3 opacity-25">
-          <span className="grid size-10 place-items-center rounded-xl bg-white/20">
-            <Basket size={18} />
+        <div className="ml-4 sm:ml-8 flex items-center gap-3 sm:gap-4 rounded-2xl p-2.5 sm:p-3 opacity-25">
+          <span className="grid size-9 sm:size-10 shrink-0 place-items-center rounded-xl bg-white/20">
+            <Basket size={16} />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-[15px] font-semibold leading-tight">Groceries</p>
-            <p className="truncate text-[12px] text-white/45">Shopping · Yesterday</p>
+            <p className="truncate text-[14px] sm:text-[15px] font-semibold leading-tight">Groceries</p>
+            <p className="truncate text-[11px] sm:text-[12px] text-white/45">Shopping · Yesterday</p>
           </div>
         </div>
       </div>
@@ -57,36 +59,40 @@ function ExpenseCard() {
 
 function BudgetCard() {
   return (
-    <article className="card relative h-full min-h-[412px] overflow-visible p-8">
-      {/* fanned screens poking out above the card, like the reference's stacked images */}
-      <div aria-hidden="true" className="relative mx-auto -mt-[104px] h-[300px] w-[250px]">
+    <article className="card relative flex min-h-[440px] flex-col justify-between overflow-visible p-6 xl:p-8 sm:min-h-[412px] lg:h-full lg:min-h-[500px]">
+      {/* fanned screens poking out above the card, centered in the middle of the card */}
+      <div aria-hidden="true" className="relative mx-auto -mt-[104px] h-[300px] w-[230px] sm:w-[250px] lg:-mt-[48px]">
         {[
-          { s: SCREENS.ai, rot: -13, x: -36, o: 0.55, z: 1 },
-          { s: SCREENS.home, rot: -5, x: -14, o: 0.8, z: 2 },
-          { s: SCREENS.budget, rot: 5, x: 14, o: 1, z: 3 },
+          { s: SCREENS.ai, rot: -10, x: -24, o: 0.55, z: 1 },
+          { s: SCREENS.home, rot: 0, x: 0, o: 0.85, z: 2 },
+          { s: SCREENS.budget, rot: 10, x: 24, o: 1, z: 3 },
         ].map(({ s, rot, x, o, z }) => (
           <div
             key={s.src}
-            className="absolute left-1/2 top-0 h-[300px] w-[200px] -translate-x-1/2 overflow-hidden rounded-[26px] border border-white/15 bg-[#f4f6fb] shadow-[0_24px_50px_-18px_rgba(0,0,0,0.9)]"
-            style={{ transform: `translateX(calc(-50% + ${x}px)) rotate(${rot}deg)`, opacity: o, zIndex: z }}
+            className="absolute left-1/2 top-0 h-[300px] w-[185px] sm:w-[200px] overflow-hidden rounded-[26px] border border-white/15 bg-[#f4f6fb] shadow-[0_24px_50px_-18px_rgba(0,0,0,0.9)]"
+            style={{ transform: `translateX(calc(-50% + ${x}px)) rotate(${rot}deg)`, transformOrigin: 'bottom center', opacity: o, zIndex: z }}
           >
             <img src={s.src} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover object-top" />
           </div>
         ))}
       </div>
-      <h3 className="mt-6 text-[24px] font-semibold tracking-[-0.02em]">{overview.budgets.title}</h3>
-      <p className="mt-2 text-[17px] leading-snug text-white/55">{overview.budgets.body}</p>
+      <div className="mt-6">
+        <h3 className="text-[22px] sm:text-[24px] font-semibold tracking-[-0.02em]">{overview.budgets.title}</h3>
+        <p className="mt-2 text-[15px] sm:text-[17px] leading-snug text-white/55">{overview.budgets.body}</p>
+      </div>
     </article>
   )
 }
 
 function AiCard() {
   return (
-    <article className="card relative h-full min-h-[412px] overflow-hidden p-8 lg:min-h-[640px]">
-      <h3 className="text-[26px] font-semibold tracking-[-0.02em]">{overview.ai.title}</h3>
-      <p className="mt-2 max-w-[420px] text-[18px] leading-snug text-white/55">{overview.ai.body}</p>
+    <article className="card relative flex h-full min-h-[412px] flex-col justify-between overflow-hidden p-6 xl:p-8 lg:min-h-[500px]">
+      <div>
+        <h3 className="text-[24px] sm:text-[26px] font-semibold tracking-[-0.02em]">{overview.ai.title}</h3>
+        <p className="mt-2 max-w-[420px] text-[16px] sm:text-[18px] leading-snug text-white/55">{overview.ai.body}</p>
+      </div>
 
-      <div aria-hidden="true" className="absolute inset-x-0 bottom-[-120px] mx-auto size-[460px]">
+      <div aria-hidden="true" className="absolute inset-x-0 bottom-[-120px] mx-auto size-[400px] sm:size-[460px] lg:bottom-[-30px]">
         <div className="absolute inset-0 rounded-full bg-[radial-gradient(closest-side,rgb(236_72_153/0.30),rgb(124_58_237/0.20)_50%,transparent_75%)]" />
         {[118, 190].map((r) => (
           <div
@@ -148,15 +154,15 @@ export function FeatureOverview() {
 
       <div
         ref={grid}
-        className="mx-auto mt-16 grid max-w-[1560px] grid-cols-1 items-start gap-5 md:mt-24 lg:grid-cols-[1.5fr_1fr_1.5fr] lg:gap-8"
+        className="mx-auto mt-16 grid max-w-[1560px] grid-cols-1 items-start gap-5 md:mt-24 lg:grid-cols-3 lg:items-stretch lg:gap-8"
       >
-        <div data-card className="min-w-0">
+        <div data-card className="min-w-0 lg:h-full">
           <ExpenseCard />
         </div>
-        <div data-card className="mt-24 min-w-0 lg:mt-0">
+        <div data-card className="mt-24 min-w-0 lg:mt-0 lg:h-full">
           <BudgetCard />
         </div>
-        <div data-card className="min-w-0">
+        <div data-card className="mt-16 min-w-0 lg:mt-0 lg:h-full">
           <AiCard />
         </div>
       </div>

@@ -47,6 +47,7 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+  zoom: 0.85;
 }
 
 [id] {
@@ -57,10 +58,20 @@ body {
   background: rgb(139 92 246 / 0.45);
 }
 
-:focus-visible {
+:focus-visible:not(input, select, textarea) {
   outline: 2px solid var(--color-violet-soft);
   outline-offset: 3px;
   border-radius: 8px;
+}
+
+input:focus,
+input:focus-visible,
+select:focus,
+select:focus-visible,
+textarea:focus,
+textarea:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

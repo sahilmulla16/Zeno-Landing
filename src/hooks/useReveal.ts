@@ -30,7 +30,7 @@ export function useReveal<T extends HTMLElement>(ref: RefObject<T | null>, opts:
         ease: 'power3.out',
         stagger: 0.12,
         clearProps: 'opacity,transform,filter',
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true, invalidateOnRefresh: true },
       }
       if (opts.blur) vars.filter = `blur(${opts.blur}px)`
       gsap.from(targets, vars)

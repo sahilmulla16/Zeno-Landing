@@ -6,6 +6,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+const GMAIL_RE = /^[a-z0-9](?:[a-z0-9._%+-]*[a-z0-9])?@(gmail|googlemail)\.com$/i
 const RATE_MAX = 5 // signups per window per IP
 const RATE_WINDOW_SECONDS = 600
 
@@ -58,7 +59,9 @@ Deno.serve(async (req) => {
   if (typeof body.website === 'string' && body.website.trim() !== '') return json(req, 200, { ok: true, status: 'created' })
 
   const email = str(body.email, 254)?.toLowerCase() ?? ''
-  if (!email || !EMAIL_RE.test(email)) return json(req, 422, { ok: false, error: 'Please enter a valid email address.' })
+  if (!email || !EMAIL_RE.test(email) || !GMAIL_RE.test(email)) {
+    return json(req, 422, { ok: false, error: 'Please enter a valid Gmail address (@gmail.com).' })
+  }
   if (body.consent_marketing !== true) return json(req, 422, { ok: false, error: 'Consent is required to join the waitlist.' })
 
   const supabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, {
@@ -85,28 +88,39 @@ Deno.serve(async (req) => {
       ? { primary_goal: str((body.research_responses as Record<string, unknown>).primary_goal, 120) }
       : {}
 
-  const { error } = await supabase.from('waitlist_signups').insert({
-    email,
-    consent_marketing: true,
-    consent_at: new Date().toISOString(),
-    source: str(body.source, 120),
-    utm_source: str(body.utm_source, 200),
-    utm_medium: str(body.utm_medium, 200),
-    utm_campaign: str(body.utm_campaign, 200),
-    utm_content: str(body.utm_content, 200),
-    content_id: str(body.content_id, 200),
-    referrer: str(body.referrer, 500),
-    research_responses: research,
-    ip_hash: ipHash,
-    user_agent: str(req.headers.get('user-agent'), 300),
-  })
+  const { data: inserted, error } = await supabase
+    .from('waitlist_signups')
+    .insert({
+      email,
+      consent_marketing: true,
+      consent_at: new Date().toISOString(),
+      source: str(body.source, 120),
+      utm_source: str(body.utm_source, 200),
+      utm_medium: str(body.utm_medium, 200),
+      utm_campaign: str(body.utm_campaign, 200),
+      utm_content: str(body.utm_content, 200),
+      content_id: str(body.content_id, 200),
+      referrer: str(body.referrer, 500),
+      research_responses: research,
+      ip_hash: ipHash,
+      user_agent: str(req.headers.get('user-agent'), 300),
+    })
+    .select('id')
+    .single()
 
   if (error) {
-    if (error.code === '23505') return json(req, 200, { ok: true, status: 'already_registered' })
+    if (error.code === '23505') {
+      const { data: existing } = await supabase
+        .from('waitlist_signups')
+        .select('id')
+        .eq('email_normalized', email)
+        .maybeSingle()
+      return json(req, 200, { ok: true, status: 'already_registered', signupId: existing?.id })
+    }
     if (error.code === '23514') return json(req, 422, { ok: false, error: 'Please check your details and try again.' })
     console.error('insert error', error.code, error.message)
     return json(req, 500, { ok: false, error: 'Server error.' })
   }
 
-  return json(req, 200, { ok: true, status: 'created' })
+  return json(req, 200, { ok: true, status: 'created', signupId: inserted?.id })
 })
