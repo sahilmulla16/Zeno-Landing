@@ -15,11 +15,20 @@ const allowed = (Deno.env.get('ALLOWED_ORIGINS') ?? '')
   .map((s) => s.trim())
   .filter(Boolean)
 
+function isOriginAllowed(origin: string): boolean {
+  if (!origin) return true
+  if (allowed.length === 0 || allowed.includes('*')) return true
+  if (allowed.includes(origin)) return true
+  if (origin.endsWith('.vercel.app')) return true
+  if (origin.includes('localhost') || origin.includes('127.0.0.1')) return true
+  return false
+}
+
 function cors(req: Request): Record<string, string> {
   const origin = req.headers.get('origin') ?? ''
-  const ok = allowed.length === 0 || allowed.includes(origin)
+  const ok = isOriginAllowed(origin)
   return {
-    'Access-Control-Allow-Origin': ok ? (allowed.length === 0 ? '*' : origin) : 'null',
+    'Access-Control-Allow-Origin': ok ? (origin || '*') : '*',
     'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     Vary: 'Origin',
@@ -46,7 +55,7 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json(req, 405, { ok: false, error: 'Method not allowed' })
 
   const origin = req.headers.get('origin') ?? ''
-  if (allowed.length > 0 && !allowed.includes(origin)) return json(req, 403, { ok: false, error: 'Forbidden' })
+  if (!isOriginAllowed(origin)) return json(req, 403, { ok: false, error: 'Forbidden' })
 
   let body: Record<string, unknown>
   try {
@@ -78,10 +87,10 @@ Deno.serve(async (req) => {
     p_window_seconds: RATE_WINDOW_SECONDS,
   })
   if (rlError) {
-    console.error('rate limit error', rlError.message)
-    return json(req, 500, { ok: false, error: 'Server error.' })
+    console.warn('rate limit check warning (skipped):', rlError.message)
+  } else if (allowedByLimit === false) {
+    return json(req, 429, { ok: false, error: 'Too many attempts. Please wait a few minutes.' })
   }
-  if (allowedByLimit === false) return json(req, 429, { ok: false, error: 'Too many attempts.' })
 
   const research =
     body.research_responses && typeof body.research_responses === 'object' && !Array.isArray(body.research_responses)

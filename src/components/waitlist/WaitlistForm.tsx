@@ -218,21 +218,20 @@ export function WaitlistForm({ idPrefix = 'cta', onEngagedChange }: Props) {
       return
     }
 
-    // 1. LOCAL DUPLICATE CHECK: One Entry Per Gmail / Email
-    if (hasCompletedOnboarding(cleanEmail)) {
+    // 1. Check local status for immediate UI response
+    const isLocallyDone = hasCompletedOnboarding(cleanEmail)
+    if (isLocallyDone) {
       setIsRepeat(true)
       setStage('repeat_screen')
       setShowModal(true)
-      return
+    } else {
+      setIsRepeat(false)
+      setStage('confirming')
+      setShowModal(true)
+      trackResearchEvent('research_invitation_viewed')
     }
 
-    // 2. NEW ENTRY: Transition immediately (< 50ms) to Onboarding flow
-    setIsRepeat(false)
-    setStage('confirming')
-    setShowModal(true)
-    trackResearchEvent('research_invitation_viewed')
-
-    // 3. SERVER-SIDE DUPLICATE CHECK: Validate against Supabase's waitlist_signups
+    // 2. Always submit to Supabase to guarantee row insertion and database sync
     submitWaitlist({
       email: cleanEmail,
       consent: true,
@@ -245,8 +244,6 @@ export function WaitlistForm({ idPrefix = 'cta', onEngagedChange }: Props) {
         }
 
         if (res.status === 'already_registered') {
-          // If Supabase confirms existing registration:
-          // Immediately block questions, mark in localStorage, and switch to Repeat Screen
           markOnboardingCompleted(cleanEmail)
           setIsRepeat(true)
           setStage('repeat_screen')
@@ -255,8 +252,15 @@ export function WaitlistForm({ idPrefix = 'cta', onEngagedChange }: Props) {
         }
       })
       .catch((err) => {
-        if (err instanceof WaitlistError && err.kind === 'rate_limited') {
-          setErrorMsg('Too many attempts. Your spot is pending verification.')
+        console.error('Waitlist submission error:', err)
+        if (!isLocallyDone) {
+          setShowModal(false)
+          setStage('input')
+          if (err instanceof WaitlistError) {
+            setErrorMsg(err.message)
+          } else {
+            setErrorMsg('Unable to connect to waitlist. Please try again.')
+          }
         }
       })
   }
