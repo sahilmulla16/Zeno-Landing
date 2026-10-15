@@ -169,28 +169,31 @@ export function ShowcasePinned() {
         <div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="sticky top-14 sm:top-16 z-10 flex h-[calc(100dvh-4rem)] flex-col justify-between pt-1 pb-3 select-none"
+          className="sticky top-14 sm:top-16 z-10 flex h-[calc(100dvh-4rem)] flex-col justify-between pt-2 pb-5 select-none"
         >
-          {/* Top Section: Slider Indicator & Animated Statement (Moved up, logo removed) */}
-          <div className="flex flex-col items-center text-center px-4 pt-1">
-            {/* Slider motion indicator without numbers */}
-            <div className="flex items-center justify-center gap-1.5 mb-2">
-              {showcase.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => scrollToStep(i)}
-                  aria-label={`Jump to feature ${i + 1}`}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
+          {/* Vertical Slider Motion Indicator placed at the rightmost part */}
+          <div className="absolute right-2 sm:right-3.5 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-1.5 rounded-full border border-white/10 bg-black/40 p-1 backdrop-blur-md shadow-lg">
+            {showcase.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => scrollToStep(i)}
+                aria-label={`Jump to feature ${i + 1}`}
+                className="flex items-center justify-center p-1"
+              >
+                <span
+                  className={`w-1.5 rounded-full transition-all duration-300 ${
                     i === active
-                      ? 'w-7 bg-violet-soft shadow-[0_0_12px_rgba(167,139,250,0.8)]'
-                      : 'w-2 bg-white/20 hover:bg-white/40'
+                      ? 'h-6 bg-violet-soft shadow-[0_0_12px_rgba(167,139,250,0.85)]'
+                      : 'h-2 bg-white/30 hover:bg-white/60'
                   }`}
                 />
-              ))}
-            </div>
+              </button>
+            ))}
+          </div>
 
-            {/* Active Statement text moved up directly under sliders */}
+          {/* Top Section: Animated Statement */}
+          <div className="flex flex-col items-center text-center px-6 pt-1">
             <div
               key={active}
               className="flex flex-col items-center animate-in fade-in slide-in-from-bottom-2 duration-300"
@@ -201,21 +204,21 @@ export function ShowcasePinned() {
             </div>
           </div>
 
-          {/* Center Section: Elevated titanium-frame phone fully visible in viewport */}
+          {/* Center Section: Elevated titanium-frame phone with padding above and below */}
           <div
             data-phone-wrap-mobile
-            className="my-auto flex items-center justify-center px-4 transition-transform duration-500"
+            className="my-auto flex items-center justify-center px-4 py-3 sm:py-4 transition-transform duration-500"
           >
             <PhoneFrame
               screens={SCREEN_LIST}
               active={shown}
-              width="min(255px, 47vh, 64vw)"
+              width="min(245px, 44vh, 60vw)"
               priority={true}
             />
           </div>
 
-          {/* Bottom Section: Subtle interaction cue */}
-          <div className="pb-1 flex items-center justify-center gap-1.5 text-[11px] font-medium text-white/40">
+          {/* Bottom Section: Interaction cue with dedicated padding above and below */}
+          <div className="pt-2 pb-4 flex items-center justify-center gap-1.5 text-[11.5px] font-medium text-white/40">
             <span>Scroll or swipe to explore</span>
             <span className="animate-bounce text-[13px]">↓</span>
           </div>
