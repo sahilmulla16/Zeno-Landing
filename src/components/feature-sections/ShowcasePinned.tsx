@@ -163,19 +163,19 @@ export function ShowcasePinned() {
       </div>
 
       {/* ------------------------------------------------------------- */}
-      {/* MOBILE EXPERIENCE (< lg): Pinned, non-congested, synced animation */}
+      {/* MOBILE EXPERIENCE (< lg): Pinned, spacious, synced animation */}
       {/* ------------------------------------------------------------- */}
       <div className="relative block lg:hidden">
-        {/* Sticky viewport pinned while scrolling through the checkpoints */}
+        {/* Sticky viewport pinned with generous top offset and padding */}
         <div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="sticky top-14 z-10 flex h-[calc(100dvh-3.5rem)] flex-col justify-between py-4 select-none"
+          className="sticky top-20 sm:top-24 z-10 flex min-h-[calc(100dvh-6rem)] flex-col justify-between pt-6 pb-8 select-none"
         >
           {/* Top Section: Progress Tracker & Animated Statement */}
-          <div className="flex flex-col items-center text-center px-4">
+          <div className="flex flex-col items-center text-center px-4 pt-2">
             {/* Step pill indicator */}
-            <div className="flex items-center gap-2 mb-2.5">
+            <div className="flex items-center gap-2 mb-3">
               <span className="text-[11px] font-semibold tracking-wider text-violet-soft font-mono">
                 0{active + 1} / 0{showcase.length}
               </span>
@@ -203,33 +203,33 @@ export function ShowcasePinned() {
             >
               <span
                 aria-hidden="true"
-                className="mb-2 grid size-10 place-items-center rounded-full border border-white/20 bg-[radial-gradient(circle_at_30%_30%,rgb(139_92_246/0.5),rgb(20_20_30))] text-amber-200 shadow-[0_0_20px_rgba(139,92,246,0.35)]"
+                className="mb-2.5 grid size-11 place-items-center rounded-full border border-white/20 bg-[radial-gradient(circle_at_30%_30%,rgb(139_92_246/0.5),rgb(20_20_30))] text-amber-200 shadow-[0_0_24px_rgba(139,92,246,0.38)]"
               >
-                <ActiveIcon size={19} />
+                <ActiveIcon size={20} />
               </span>
-              <h3 className="max-w-[340px] text-[19px] sm:text-[22px] font-semibold leading-tight tracking-tight text-white min-h-[48px] flex items-center justify-center">
+              <h3 className="max-w-[350px] text-[20px] sm:text-[23px] font-semibold leading-tight tracking-tight text-white min-h-[50px] flex items-center justify-center">
                 {showcase[active].title}
               </h3>
             </div>
           </div>
 
-          {/* Center Section: Titanium-frame phone with ambient glow & responsive clamp */}
+          {/* Center Section: Prominent titanium-frame phone with ambient glow */}
           <div
             data-phone-wrap-mobile
-            className="my-auto flex items-center justify-center px-4 transition-transform duration-500"
+            className="my-5 flex items-center justify-center px-4 transition-transform duration-500"
           >
             <PhoneFrame
               screens={SCREEN_LIST}
               active={shown}
-              width="min(210px, 42vh, 52vw)"
+              width="min(270px, 48vh, 66vw)"
               priority={true}
             />
           </div>
 
-          {/* Bottom Section: Subtle interaction cue */}
-          <div className="flex items-center justify-center gap-1.5 text-[11px] text-white/40 pb-1">
+          {/* Bottom Section: Generous padding between phone and exploration hint */}
+          <div className="mt-4 pb-3 flex items-center justify-center gap-2 text-[12px] font-medium text-white/45">
             <span>Scroll or swipe to explore</span>
-            <span className="animate-bounce">↓</span>
+            <span className="animate-bounce text-[14px]">↓</span>
           </div>
         </div>
 

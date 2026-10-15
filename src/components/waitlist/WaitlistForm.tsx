@@ -539,33 +539,35 @@ export function WaitlistForm({ idPrefix = 'cta', onEngagedChange }: Props) {
               >
                 <ArrowLeft size={14} />
               </button>
-              <span className="text-[12px] font-medium tracking-wide text-white/50">
-                Question {stage === 'question_1' ? 1 : stage === 'question_2' ? 2 : stage === 'question_3' ? 3 : 4} of 3
+              <span className="text-[12px] font-medium tracking-wide text-white/50 uppercase font-mono">
+                {stage === 'question_4' ? 'Dream Feature · Optional' : `Question ${stage === 'question_1' ? 1 : stage === 'question_2' ? 2 : 3} of 3`}
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5">
-              {[1, 2, 3].map((step) => {
-                const cur = stage === 'question_1' ? 1 : stage === 'question_2' ? 2 : 3
-                return (
-                  <span
-                    key={step}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      step === cur
-                        ? 'w-6 bg-violet-soft shadow-[0_0_8px_rgba(167,139,250,0.6)]'
-                        : step < cur
-                        ? 'w-3 bg-emerald-400'
-                        : 'w-3 bg-white/10'
-                    }`}
-                  />
-                )
-              })}
-            </div>
+            {stage !== 'question_4' && (
+              <div className="flex items-center gap-1.5">
+                {[1, 2, 3].map((step) => {
+                  const cur = stage === 'question_1' ? 1 : stage === 'question_2' ? 2 : 3
+                  return (
+                    <span
+                      key={step}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        step === cur
+                          ? 'w-6 bg-violet-soft shadow-[0_0_8px_rgba(167,139,250,0.6)]'
+                          : step < cur
+                          ? 'w-3 bg-emerald-400'
+                          : 'w-3 bg-white/10'
+                      }`}
+                    />
+                  )
+                })}
+              </div>
+            )}
 
             <button
               type="button"
               onClick={() => handleFinishFlow()}
-              className="text-[12px] text-white/40 transition-colors hover:text-white/80"
+              className="text-[12.5px] font-medium text-white/50 transition-colors hover:text-white"
             >
               Skip
             </button>
@@ -580,27 +582,27 @@ export function WaitlistForm({ idPrefix = 'cta', onEngagedChange }: Props) {
                 Tap your biggest friction point. We’ll solve it first.
               </p>
 
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div className="mt-4 flex flex-col gap-2.5">
                 {PAIN_POINTS.map((opt) => (
                   <button
                     key={opt.id}
                     type="button"
                     onClick={() => {
                       recordAnswer({ primaryPainPoint: opt.label })
-                      setTimeout(() => setStage('question_2'), 220)
+                      setTimeout(() => setStage('question_2'), 200)
                     }}
-                    className="group flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 text-left transition-all hover:border-white/20 hover:bg-white/[0.06] active:scale-[0.98]"
+                    className="group flex items-center gap-3.5 rounded-2xl border border-white/[0.09] bg-white/[0.035] p-3.5 sm:p-4 text-left transition-all hover:border-white/20 hover:bg-white/[0.07] active:scale-[0.98]"
                   >
-                    <div className="flex items-center justify-between w-full">
-                      <span className="text-xl" role="img" aria-hidden="true">{opt.icon}</span>
-                      <span className="grid size-5 place-items-center rounded-full border border-white/20 opacity-0 group-hover:opacity-100">
-                        <Check size={11} strokeWidth={3} />
-                      </span>
+                    <div className="grid size-12 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.05] text-2xl shadow-inner">
+                      <span role="img" aria-hidden="true">{opt.icon}</span>
                     </div>
-                    <div className="mt-3">
-                      <p className="text-[14px] font-medium text-white leading-snug">{opt.label}</p>
-                      <p className="mt-1 text-[12px] text-white/45 leading-snug">{opt.desc}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[14.5px] sm:text-[15.5px] font-semibold text-white leading-snug">{opt.label}</p>
+                      <p className="mt-0.5 text-[12px] sm:text-[12.5px] text-white/50 leading-snug">{opt.desc}</p>
                     </div>
+                    <span className="grid size-6 shrink-0 place-items-center rounded-full border border-white/20 bg-white/[0.03] text-white/40 transition-colors group-hover:border-violet-soft/60 group-hover:bg-violet-soft/10 group-hover:text-violet-soft">
+                      <Check size={12} strokeWidth={3} />
+                    </span>
                   </button>
                 ))}
               </div>
@@ -616,27 +618,27 @@ export function WaitlistForm({ idPrefix = 'cta', onEngagedChange }: Props) {
                 Helps us configure frictionless import and auto-tracking methods.
               </p>
 
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div className="mt-4 flex flex-col gap-2.5">
                 {TRACKING_METHODS.map((opt) => (
                   <button
                     key={opt.id}
                     type="button"
                     onClick={() => {
                       recordAnswer({ currentTrackingMethod: opt.label })
-                      setTimeout(() => setStage('question_3'), 220)
+                      setTimeout(() => setStage('question_3'), 200)
                     }}
-                    className="group flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 text-left transition-all hover:border-white/20 hover:bg-white/[0.06] active:scale-[0.98]"
+                    className="group flex items-center gap-3.5 rounded-2xl border border-white/[0.09] bg-white/[0.035] p-3.5 sm:p-4 text-left transition-all hover:border-white/20 hover:bg-white/[0.07] active:scale-[0.98]"
                   >
-                    <div className="flex items-center justify-between w-full">
-                      <span className="text-xl" role="img" aria-hidden="true">{opt.icon}</span>
-                      <span className="grid size-5 place-items-center rounded-full border border-white/20 opacity-0 group-hover:opacity-100">
-                        <Check size={11} strokeWidth={3} />
-                      </span>
+                    <div className="grid size-12 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.05] text-2xl shadow-inner">
+                      <span role="img" aria-hidden="true">{opt.icon}</span>
                     </div>
-                    <div className="mt-3">
-                      <p className="text-[14px] font-medium text-white leading-snug">{opt.label}</p>
-                      <p className="mt-1 text-[12px] text-white/45 leading-snug">{opt.desc}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[14.5px] sm:text-[15.5px] font-semibold text-white leading-snug">{opt.label}</p>
+                      <p className="mt-0.5 text-[12px] sm:text-[12.5px] text-white/50 leading-snug">{opt.desc}</p>
                     </div>
+                    <span className="grid size-6 shrink-0 place-items-center rounded-full border border-white/20 bg-white/[0.03] text-white/40 transition-colors group-hover:border-violet-soft/60 group-hover:bg-violet-soft/10 group-hover:text-violet-soft">
+                      <Check size={12} strokeWidth={3} />
+                    </span>
                   </button>
                 ))}
               </div>
@@ -652,27 +654,27 @@ export function WaitlistForm({ idPrefix = 'cta', onEngagedChange }: Props) {
                 We’ll tailor your early-access account setup around this goal.
               </p>
 
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div className="mt-4 flex flex-col gap-2.5">
                 {OUTCOMES.map((opt) => (
                   <button
                     key={opt.id}
                     type="button"
                     onClick={() => {
                       recordAnswer({ desiredOutcome: opt.label })
-                      setTimeout(() => setStage('question_4'), 220)
+                      setTimeout(() => setStage('question_4'), 200)
                     }}
-                    className="group flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 text-left transition-all hover:border-white/20 hover:bg-white/[0.06] active:scale-[0.98]"
+                    className="group flex items-center gap-3.5 rounded-2xl border border-white/[0.09] bg-white/[0.035] p-3.5 sm:p-4 text-left transition-all hover:border-white/20 hover:bg-white/[0.07] active:scale-[0.98]"
                   >
-                    <div className="flex items-center justify-between w-full">
-                      <span className="text-xl" role="img" aria-hidden="true">{opt.icon}</span>
-                      <span className="grid size-5 place-items-center rounded-full border border-white/20 opacity-0 group-hover:opacity-100">
-                        <Check size={11} strokeWidth={3} />
-                      </span>
+                    <div className="grid size-12 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.05] text-2xl shadow-inner">
+                      <span role="img" aria-hidden="true">{opt.icon}</span>
                     </div>
-                    <div className="mt-3">
-                      <p className="text-[14px] font-medium text-white leading-snug">{opt.label}</p>
-                      <p className="mt-1 text-[12px] text-white/45 leading-snug">{opt.desc}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[14.5px] sm:text-[15.5px] font-semibold text-white leading-snug">{opt.label}</p>
+                      <p className="mt-0.5 text-[12px] sm:text-[12.5px] text-white/50 leading-snug">{opt.desc}</p>
                     </div>
+                    <span className="grid size-6 shrink-0 place-items-center rounded-full border border-white/20 bg-white/[0.03] text-white/40 transition-colors group-hover:border-violet-soft/60 group-hover:bg-violet-soft/10 group-hover:text-violet-soft">
+                      <Check size={12} strokeWidth={3} />
+                    </span>
                   </button>
                 ))}
               </div>
@@ -684,12 +686,12 @@ export function WaitlistForm({ idPrefix = 'cta', onEngagedChange }: Props) {
               <h4 className="text-[20px] sm:text-[23px] font-semibold tracking-tight text-white">
                 What’s your dream finance feature?
               </h4>
-              <p className="mt-1 text-[13px] text-white/50 leading-snug">
+              <p className="mt-1 text-[13px] sm:text-[14px] text-white/50 leading-snug">
                 Something missing from every other app? Tell us below.
               </p>
 
               <div className="mt-4 flex flex-col gap-3">
-                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 focus-within:border-violet-soft/70">
+                <div className="rounded-2xl border border-white/15 bg-white/[0.04] p-4 focus-within:border-violet-soft/70 focus-within:bg-white/[0.06] transition-colors">
                   <textarea
                     rows={3}
                     value={answers.featureSuggestion || ''}
@@ -699,11 +701,11 @@ export function WaitlistForm({ idPrefix = 'cta', onEngagedChange }: Props) {
                       setAnswers((prev) => ({ ...prev, featureSuggestion: val }))
                     }}
                     placeholder="e.g. Split UPI bills with flatmates, salary allocation bucket, WhatsApp expense logger..."
-                    className="w-full resize-none border-0 bg-transparent text-[14px] text-white outline-none placeholder:text-white/30"
+                    className="w-full resize-none border-0 bg-transparent text-[16px] text-white outline-none placeholder:text-white/35 leading-relaxed"
                   />
                 </div>
 
-                <label className="group flex cursor-pointer select-none items-center gap-2.5 text-[12.5px] text-white/60">
+                <label className="group flex cursor-pointer select-none items-center gap-2.5 text-[13px] text-white/70">
                   <span className="relative flex size-4 shrink-0 items-center justify-center rounded border border-white/20 bg-white/[0.06] transition-colors group-hover:border-violet-soft/60">
                     <input
                       type="checkbox"
@@ -734,10 +736,10 @@ export function WaitlistForm({ idPrefix = 'cta', onEngagedChange }: Props) {
                       featureContactConsent: answers.featureContactConsent,
                     })
                   }
-                  className="mt-2 flex h-11 items-center justify-center gap-2 rounded-xl bg-white px-5 text-[14px] font-semibold text-black transition-all hover:scale-[1.01] active:scale-[0.98]"
+                  className="mt-2 flex h-12 items-center justify-center gap-2 rounded-xl bg-white px-5 text-[14.5px] font-bold text-black transition-all hover:scale-[1.01] active:scale-[0.98] shadow-md"
                 >
                   <span>Finish & Claim VIP Priority</span>
-                  <Sparkle size={14} />
+                  <Sparkle size={15} />
                 </button>
               </div>
             </>

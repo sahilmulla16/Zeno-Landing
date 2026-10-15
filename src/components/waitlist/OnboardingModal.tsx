@@ -438,15 +438,17 @@ export function OnboardingModal({
           className="pointer-events-none absolute -bottom-20 right-0 h-48 w-48 rounded-full bg-[radial-gradient(circle_at_center,rgb(16_185_129/0.16),transparent_70%)] blur-xl"
         />
 
-        {/* Close Button */}
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close dialog"
-          className="absolute right-5 top-5 z-40 grid size-8 place-items-center rounded-xl border border-white/10 bg-white/[0.05] text-white/50 transition-all hover:scale-105 hover:border-white/20 hover:text-white active:scale-95"
-        >
-          <Close size={15} />
-        </button>
+        {/* Close Button: Only show on confirming screen, final question, repeat screen, or completion */}
+        {(step === 'confirming' || step === 'question_4' || step === 'completed' || isRepeat) && (
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close dialog"
+            className="absolute right-5 top-5 z-40 grid size-8 place-items-center rounded-xl border border-white/10 bg-white/[0.05] text-white/50 transition-all hover:scale-105 hover:border-white/20 hover:text-white active:scale-95"
+          >
+            <Close size={15} />
+          </button>
+        )}
 
         {/* ------------------------------------------------------------- */}
         {/* REPEAT SIGN UP SCREEN: Strict duplicate block */}
@@ -525,122 +527,67 @@ export function OnboardingModal({
           </div>
         ) : (
           /* ------------------------------------------------------------- */
-          /* NEW USER FLOW: CELEBRATORY HURRAY POP SCREEN */
+          /* NEW USER FLOW: CLEAN, HIGHLIGHTED CONFIRMATION SCREEN */
           /* ------------------------------------------------------------- */
           <div className="relative z-10">
             {step === 'confirming' && (
-              <div className="flex flex-col gap-5 pt-1 animate-in fade-in zoom-in-95 duration-300">
-                {/* Celebratory Badge with Radiant Glow Rings */}
+              <div className="flex flex-col gap-6 pt-2 animate-in fade-in zoom-in-95 duration-300">
+                {/* Celebratory Clean Header */}
                 <div className="flex flex-col items-center text-center">
-                  <div className="relative mb-4">
-                    {/* Pulsing Concentric Aura Halo */}
-                    <div className="absolute inset-0 -m-3 rounded-full bg-gradient-to-tr from-violet-500/40 via-pink-500/30 to-emerald-400/40 blur-xl animate-pulse" />
-
-                    <div className="relative flex size-20 items-center justify-center rounded-3xl border border-white/20 bg-gradient-to-tr from-[#161226] via-[#1a142e] to-[#121c21] shadow-[0_0_40px_rgba(139,92,246,0.5),inset_0_1px_1px_rgba(255,255,255,0.4)] transition-transform hover:scale-105">
-                      <span className="text-3xl select-none animate-bounce" role="img" aria-label="Hurray">
+                  <div className="relative mb-3.5">
+                    <div className="relative flex size-16 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-tr from-[#161226] via-[#1a142e] to-[#121c21] shadow-[0_0_36px_rgba(139,92,246,0.45)]">
+                      <span className="text-3xl select-none" role="img" aria-label="Hurray">
                         🎉
                       </span>
                     </div>
-
-                    <span className="absolute -bottom-1 -right-1 grid size-7 place-items-center rounded-full border-2 border-[#0a0a10] bg-emerald-400 text-black shadow-md">
-                      <Check size={14} strokeWidth={3.2} />
+                    <span className="absolute -bottom-1 -right-1 grid size-6 place-items-center rounded-full border-2 border-[#0a0a10] bg-emerald-400 text-black shadow-md">
+                      <Check size={12} strokeWidth={3.5} />
                     </span>
                   </div>
 
-                  {/* Celebratory Hurray Eyebrow Pill */}
-                  <div className="inline-flex items-center gap-1.5 rounded-full border border-violet-soft/40 bg-violet/15 px-3 py-1 text-[11.5px] font-bold tracking-wide text-violet-soft uppercase shadow-[0_0_16px_rgba(139,92,246,0.3)]">
-                    <Sparkle size={13} className="text-violet-soft" />
-                    <span>Hurray! Spot Confirmed</span>
-                  </div>
-
-                  {/* Main Celebratory Headline */}
                   <h3
                     id="onboarding-modal-title"
-                    className="mt-3 text-[clamp(1.75rem,4vw,2.2rem)] font-bold tracking-tight text-white leading-[1.12]"
+                    className="text-[clamp(1.75rem,4vw,2.2rem)] font-bold tracking-tight text-white leading-tight"
                   >
                     You’re officially on the list!
                   </h3>
 
-                  <p className="mt-2 max-w-[420px] text-[14.5px] sm:text-[15.5px] text-white/70 leading-snug">
-                    Your priority access pass is reserved for{' '}
-                    <span className="font-semibold text-white underline decoration-violet/50 underline-offset-2">
+                  <p className="mt-2 text-[14.5px] sm:text-[15.5px] text-white/70 leading-relaxed max-w-[440px]">
+                    Priority access spot reserved for{' '}
+                    <span className="font-semibold text-white">
                       {email}
                     </span>
-                    . We roll out beta invites in small cohorts.
+                    . We roll out private beta invites in small cohorts.
                   </p>
                 </div>
 
-                {/* VIP Early Access Ticket Pass Card */}
-                <div className="relative overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-b from-white/[0.07] via-white/[0.03] to-white/[0.01] p-4 sm:p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]">
-                  {/* Subtle holographic diagonal sheen */}
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute -top-12 -right-12 h-32 w-32 rotate-12 rounded-full bg-gradient-to-br from-pink-500/15 via-violet-500/20 to-transparent blur-xl"
-                  />
-
-                  <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="grid size-6 place-items-center rounded-lg bg-violet/30 text-violet-soft">
-                        <Zap size={13} />
-                      </span>
-                      <span className="text-xs font-semibold tracking-wider text-white/90 uppercase">
-                        Zeno Early Alpha Pass
-                      </span>
-                    </div>
-
-                    <span className="rounded-full border border-emerald-400/40 bg-emerald-400/10 px-2.5 py-0.5 text-[10.5px] font-bold text-emerald-300">
-                      BATCH 1 · VIP
-                    </span>
+                {/* Big, Prominently Highlighted Personalize Action Card */}
+                <div className="flex flex-col items-center gap-3 rounded-3xl border border-white/10 bg-white/[0.04] p-5 sm:p-6 text-center shadow-lg">
+                  <div className="flex items-center gap-2 text-violet-soft text-[12.5px] font-semibold uppercase tracking-wider">
+                    <Sparkle size={14} />
+                    <span>Personalize Your Experience</span>
                   </div>
 
-                  <div className="relative z-10 mt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs text-white/60">
-                    <div className="flex items-center gap-1.5">
-                      <span className="size-1.5 rounded-full bg-violet-soft" />
-                      <span>Smart Auto-Track</span>
-                      <span className="text-white/20">·</span>
-                      <span>Zeno AI Assistant</span>
-                      <span className="text-white/20">·</span>
-                      <span>Budgets</span>
-                    </div>
+                  <p className="text-[13.5px] sm:text-[14px] text-white/60 max-w-[420px] leading-snug">
+                    Answer 3 quick micro-questions (~20 seconds) so we prioritize the exact tools you need most.
+                  </p>
 
-                    <span className="font-mono text-[11px] text-white/40">
-                      ZN-VIP#{Math.abs(email.split('').reduce((acc, c) => (acc << 5) - acc + c.charCodeAt(0), 0) % 9000 + 1000)}
-                    </span>
-                  </div>
-                </div>
+                  <button
+                    type="button"
+                    onClick={() => setStep('question_1')}
+                    className="group relative mt-2 flex h-14 w-full items-center justify-center gap-2.5 rounded-2xl bg-white px-7 text-[15.5px] font-bold text-black transition-all hover:scale-[1.01] hover:bg-white active:scale-[0.98] shadow-[0_8px_32px_rgba(255,255,255,0.28)]"
+                  >
+                    <span>Personalize My Zeno Build</span>
+                    <ArrowRight size={17} className="transition-transform group-hover:translate-x-1" />
+                  </button>
 
-                {/* Interactive Personalization Callout */}
-                <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-left backdrop-blur-md">
-                  <div className="flex items-start gap-3">
-                    <div className="grid size-8 shrink-0 place-items-center rounded-lg bg-violet/20 text-violet-soft">
-                      <Sparkle size={15} />
-                    </div>
-                    <div>
-                      <p className="text-[13.5px] font-semibold text-white">Help tailor your early access build</p>
-                      <p className="mt-0.5 text-[12.5px] text-white/50 leading-snug">
-                        Answer 3 quick questions (~20s) so we prioritize the features you need most.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-                    <button
-                      type="button"
-                      onClick={() => setStep('question_1')}
-                      className="group flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-white px-5 text-[14px] font-bold text-black transition-all hover:scale-[1.02] hover:bg-white active:scale-[0.98] shadow-[0_6px_24px_rgba(255,255,255,0.22)]"
-                    >
-                      <span>Personalize My Zeno Build</span>
-                      <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleFinish()}
-                      className="flex h-12 items-center justify-center rounded-xl px-4 text-[13px] font-medium text-white/50 transition-colors hover:text-white"
-                    >
-                      Skip for now
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleFinish()}
+                    className="text-[12.5px] font-medium text-white/40 hover:text-white transition-colors pt-1"
+                  >
+                    Maybe later (I'll keep default settings)
+                  </button>
                 </div>
               </div>
             )}
@@ -648,64 +595,80 @@ export function OnboardingModal({
             {/* Questions 1 to 4 Progress Header */}
             {step !== 'confirming' && step !== 'completed' && (
               <div>
-                <div className="mb-4 flex items-center justify-between">
+                <div className="mb-5 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (step === 'question_1') setStep('confirming')
-                        if (step === 'question_2') setStep('question_1')
-                        if (step === 'question_3') setStep('question_2')
-                        if (step === 'question_4') setStep('question_3')
-                      }}
-                      className="grid size-8 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white/60 hover:text-white"
-                      aria-label="Back"
-                    >
-                      <ArrowLeft size={14} />
-                    </button>
-                    <span className="text-[12px] font-medium text-white/50">
-                      Question {step === 'question_1' ? 1 : step === 'question_2' ? 2 : step === 'question_3' ? 3 : 4} of 3
+                    {step !== 'question_1' && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (step === 'question_2') setStep('question_1')
+                          if (step === 'question_3') setStep('question_2')
+                          if (step === 'question_4') setStep('question_3')
+                        }}
+                        className="grid size-8 place-items-center rounded-lg border border-white/10 bg-white/[0.04] text-white/60 hover:text-white"
+                        aria-label="Back"
+                      >
+                        <ArrowLeft size={14} />
+                      </button>
+                    )}
+                    <span className="text-[12.5px] font-semibold tracking-wide text-white/50 uppercase font-mono">
+                      {step === 'question_4' ? 'Dream Feature · Optional' : `Question ${step === 'question_1' ? 1 : step === 'question_2' ? 2 : 3} of 3`}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-1.5">
-                    {[1, 2, 3].map((num) => {
-                      const cur = step === 'question_1' ? 1 : step === 'question_2' ? 2 : 3
-                      return (
-                        <span
-                          key={num}
-                          className={`h-1.5 rounded-full transition-all duration-300 ${
-                            num === cur
-                              ? 'w-6 bg-violet-soft shadow-[0_0_8px_rgba(167,139,250,0.6)]'
-                              : num < cur
-                              ? 'w-3 bg-emerald-400'
-                              : 'w-3 bg-white/10'
-                          }`}
-                        />
-                      )
-                    })}
-                  </div>
+                  {/* 3 Progress Dots (Only for questions 1 to 3) */}
+                  {step !== 'question_4' && (
+                    <div className="flex items-center gap-1.5">
+                      {[1, 2, 3].map((num) => {
+                        const cur = step === 'question_1' ? 1 : step === 'question_2' ? 2 : 3
+                        return (
+                          <span
+                            key={num}
+                            className={`h-1.5 rounded-full transition-all duration-300 ${
+                              num === cur
+                                ? 'w-7 bg-violet-soft shadow-[0_0_8px_rgba(167,139,250,0.6)]'
+                                : num < cur
+                                ? 'w-3 bg-emerald-400'
+                                : 'w-3 bg-white/15'
+                            }`}
+                          />
+                        )
+                      })}
+                    </div>
+                  )}
 
-                  <button
-                    type="button"
-                    onClick={() => handleFinish()}
-                    className="text-[12px] text-white/40 hover:text-white"
-                  >
-                    Skip
-                  </button>
+                  {/* Skip for Q1-Q3; Close button ONLY on Question 4 */}
+                  {step !== 'question_4' ? (
+                    <button
+                      type="button"
+                      onClick={() => handleFinish()}
+                      className="text-[12.5px] font-medium text-white/50 hover:text-white transition-colors px-2 py-1"
+                    >
+                      Skip
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      aria-label="Close dialog"
+                      className="grid size-8 place-items-center rounded-xl border border-white/10 bg-white/[0.05] text-white/50 transition-all hover:scale-105 hover:border-white/20 hover:text-white active:scale-95"
+                    >
+                      <Close size={14} />
+                    </button>
+                  )}
                 </div>
 
                 {/* QUESTION 1 */}
                 {step === 'question_1' && (
                   <div className="animate-in fade-in duration-200">
-                    <h4 className="text-[19px] sm:text-[21px] font-semibold tracking-tight text-white">
+                    <h4 className="text-[20px] sm:text-[22px] font-semibold tracking-tight text-white">
                       What frustrates you most about money tracking?
                     </h4>
                     <p className="mt-1 text-[13px] text-white/50 leading-snug">
                       Tap your biggest friction point. We’ll solve it first.
                     </p>
 
-                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="mt-4 flex flex-col gap-2.5">
                       {PAIN_POINTS.map((opt) => {
                         const isSelected = answers.primaryPainPoint === opt.label
                         return (
@@ -714,29 +677,35 @@ export function OnboardingModal({
                             type="button"
                             onClick={() => {
                               recordAnswer({ primaryPainPoint: opt.label })
-                              setTimeout(() => setStep('question_2'), 220)
+                              setTimeout(() => setStep('question_2'), 200)
                             }}
-                            className={`group flex flex-col justify-between rounded-2xl border p-3.5 text-left transition-all active:scale-[0.98] ${
+                            className={`group flex items-center gap-3.5 rounded-2xl border p-3.5 sm:p-4 text-left transition-all active:scale-[0.98] ${
                               isSelected
-                                ? 'border-violet bg-violet/20 shadow-[0_0_20px_rgba(139,92,246,0.3)]'
-                                : 'border-white/[0.08] bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.06]'
+                                ? 'border-violet bg-violet/20 shadow-[0_0_24px_rgba(139,92,246,0.35)]'
+                                : 'border-white/[0.09] bg-white/[0.035] hover:border-white/20 hover:bg-white/[0.07]'
                             }`}
                           >
-                            <div className="flex items-center justify-between">
-                              <span className="text-xl" role="img" aria-hidden="true">{opt.icon}</span>
-                              <span
-                                className={`grid size-5 place-items-center rounded-full border transition-all ${
-                                  isSelected
-                                    ? 'border-violet-soft bg-violet text-white'
-                                    : 'border-white/20 opacity-0 group-hover:opacity-100'
-                                }`}
-                              >
-                                <Check size={11} strokeWidth={3} />
-                              </span>
+                            <div className="grid size-12 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.05] text-2xl shadow-inner">
+                              <span role="img" aria-hidden="true">{opt.icon}</span>
                             </div>
-                            <div className="mt-2.5">
-                              <p className="text-[13.5px] font-medium text-white leading-snug">{opt.label}</p>
-                              <p className="mt-0.5 text-[11.5px] text-white/45 leading-snug">{opt.desc}</p>
+
+                            <div className="min-w-0 flex-1">
+                              <p className="text-[14.5px] sm:text-[15.5px] font-semibold text-white leading-snug">
+                                {opt.label}
+                              </p>
+                              <p className="mt-0.5 text-[12px] sm:text-[12.5px] text-white/50 leading-snug">
+                                {opt.desc}
+                              </p>
+                            </div>
+
+                            <div
+                              className={`grid size-6 shrink-0 place-items-center rounded-full border transition-all ${
+                                isSelected
+                                  ? 'border-violet-soft bg-violet text-white shadow-[0_0_10px_rgba(139,92,246,0.6)]'
+                                  : 'border-white/20 opacity-0 group-hover:opacity-100'
+                              }`}
+                            >
+                              <Check size={12} strokeWidth={3} />
                             </div>
                           </button>
                         )
@@ -748,14 +717,14 @@ export function OnboardingModal({
                 {/* QUESTION 2 */}
                 {step === 'question_2' && (
                   <div className="animate-in fade-in duration-200">
-                    <h4 className="text-[19px] sm:text-[21px] font-semibold tracking-tight text-white">
+                    <h4 className="text-[20px] sm:text-[22px] font-semibold tracking-tight text-white">
                       How do you track your expenses today?
                     </h4>
                     <p className="mt-1 text-[13px] text-white/50 leading-snug">
                       Helps us calibrate import tools & automatic tracking.
                     </p>
 
-                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="mt-4 flex flex-col gap-2.5">
                       {TRACKING_METHODS.map((opt) => {
                         const isSelected = answers.currentTrackingMethod === opt.label
                         return (
@@ -764,32 +733,39 @@ export function OnboardingModal({
                             type="button"
                             onClick={() => {
                               recordAnswer({ currentTrackingMethod: opt.label })
-                              setTimeout(() => setStep('question_3'), 220)
+                              setTimeout(() => setStep('question_3'), 200)
                             }}
-                            className={`group flex flex-col justify-between rounded-2xl border p-3.5 text-left transition-all active:scale-[0.98] ${
+                            className={`group flex items-center gap-3.5 rounded-2xl border p-3.5 sm:p-4 text-left transition-all active:scale-[0.98] ${
                               isSelected
-                                ? 'border-violet bg-violet/20 shadow-[0_0_20px_rgba(139,92,246,0.3)]'
-                                : 'border-white/[0.08] bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.06]'
+                                ? 'border-violet bg-violet/20 shadow-[0_0_24px_rgba(139,92,246,0.35)]'
+                                : 'border-white/[0.09] bg-white/[0.035] hover:border-white/20 hover:bg-white/[0.07]'
                             }`}
                           >
-                          <div className="flex items-center justify-between">
-                            <span className="text-xl" role="img" aria-hidden="true">{opt.icon}</span>
-                            <span
-                              className={`grid size-5 place-items-center rounded-full border transition-all ${
+                            <div className="grid size-12 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.05] text-2xl shadow-inner">
+                              <span role="img" aria-hidden="true">{opt.icon}</span>
+                            </div>
+
+                            <div className="min-w-0 flex-1">
+                              <p className="text-[14.5px] sm:text-[15.5px] font-semibold text-white leading-snug">
+                                {opt.label}
+                              </p>
+                              <p className="mt-0.5 text-[12px] sm:text-[12.5px] text-white/50 leading-snug">
+                                {opt.desc}
+                              </p>
+                            </div>
+
+                            <div
+                              className={`grid size-6 shrink-0 place-items-center rounded-full border transition-all ${
                                 isSelected
-                                  ? 'border-violet-soft bg-violet text-white'
+                                  ? 'border-violet-soft bg-violet text-white shadow-[0_0_10px_rgba(139,92,246,0.6)]'
                                   : 'border-white/20 opacity-0 group-hover:opacity-100'
                               }`}
                             >
-                              <Check size={11} strokeWidth={3} />
-                            </span>
-                          </div>
-                          <div className="mt-2.5">
-                            <p className="text-[13.5px] font-medium text-white leading-snug">{opt.label}</p>
-                            <p className="mt-0.5 text-[11.5px] text-white/45 leading-snug">{opt.desc}</p>
-                          </div>
-                        </button>
-                      )})}
+                              <Check size={12} strokeWidth={3} />
+                            </div>
+                          </button>
+                        )
+                      })}
                     </div>
                   </div>
                 )}
@@ -797,14 +773,14 @@ export function OnboardingModal({
                 {/* QUESTION 3 */}
                 {step === 'question_3' && (
                   <div className="animate-in fade-in duration-200">
-                    <h4 className="text-[19px] sm:text-[21px] font-semibold tracking-tight text-white">
+                    <h4 className="text-[20px] sm:text-[22px] font-semibold tracking-tight text-white">
                       What is the #1 outcome you want from Zeno?
                     </h4>
                     <p className="mt-1 text-[13px] text-white/50 leading-snug">
                       We’ll tune your early-access account setup around this.
                     </p>
 
-                    <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="mt-4 flex flex-col gap-2.5">
                       {OUTCOMES.map((opt) => {
                         const isSelected = answers.desiredOutcome === opt.label
                         return (
@@ -813,29 +789,35 @@ export function OnboardingModal({
                             type="button"
                             onClick={() => {
                               recordAnswer({ desiredOutcome: opt.label })
-                              setTimeout(() => setStep('question_4'), 220)
+                              setTimeout(() => setStep('question_4'), 200)
                             }}
-                            className={`group flex flex-col justify-between rounded-2xl border p-3.5 text-left transition-all active:scale-[0.98] ${
+                            className={`group flex items-center gap-3.5 rounded-2xl border p-3.5 sm:p-4 text-left transition-all active:scale-[0.98] ${
                               isSelected
-                                ? 'border-violet bg-violet/20 shadow-[0_0_20px_rgba(139,92,246,0.3)]'
-                                : 'border-white/[0.08] bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.06]'
+                                ? 'border-violet bg-violet/20 shadow-[0_0_24px_rgba(139,92,246,0.35)]'
+                                : 'border-white/[0.09] bg-white/[0.035] hover:border-white/20 hover:bg-white/[0.07]'
                             }`}
                           >
-                            <div className="flex items-center justify-between">
-                              <span className="text-xl" role="img" aria-hidden="true">{opt.icon}</span>
-                              <span
-                                className={`grid size-5 place-items-center rounded-full border transition-all ${
-                                  isSelected
-                                    ? 'border-violet-soft bg-violet text-white'
-                                    : 'border-white/20 opacity-0 group-hover:opacity-100'
-                                }`}
-                              >
-                                <Check size={11} strokeWidth={3} />
-                              </span>
+                            <div className="grid size-12 shrink-0 place-items-center rounded-xl border border-white/10 bg-white/[0.05] text-2xl shadow-inner">
+                              <span role="img" aria-hidden="true">{opt.icon}</span>
                             </div>
-                            <div className="mt-2.5">
-                              <p className="text-[13.5px] font-medium text-white leading-snug">{opt.label}</p>
-                              <p className="mt-0.5 text-[11.5px] text-white/45 leading-snug">{opt.desc}</p>
+
+                            <div className="min-w-0 flex-1">
+                              <p className="text-[14.5px] sm:text-[15.5px] font-semibold text-white leading-snug">
+                                {opt.label}
+                              </p>
+                              <p className="mt-0.5 text-[12px] sm:text-[12.5px] text-white/50 leading-snug">
+                                {opt.desc}
+                              </p>
+                            </div>
+
+                            <div
+                              className={`grid size-6 shrink-0 place-items-center rounded-full border transition-all ${
+                                isSelected
+                                  ? 'border-violet-soft bg-violet text-white shadow-[0_0_10px_rgba(139,92,246,0.6)]'
+                                  : 'border-white/20 opacity-0 group-hover:opacity-100'
+                              }`}
+                            >
+                              <Check size={12} strokeWidth={3} />
                             </div>
                           </button>
                         )
@@ -847,29 +829,29 @@ export function OnboardingModal({
                 {/* QUESTION 4 (OPTIONAL) */}
                 {step === 'question_4' && (
                   <div className="animate-in fade-in duration-200">
-                    <h4 className="text-[19px] sm:text-[21px] font-semibold tracking-tight text-white">
+                    <h4 className="text-[20px] sm:text-[22px] font-semibold tracking-tight text-white">
                       Have a dream feature in mind?
                     </h4>
                     <p className="mt-1 text-[13px] text-white/50 leading-snug">
                       Optional. Tell us one thing that would make Zeno indispensable to you.
                     </p>
 
-                    <div className="mt-3.5 flex flex-col gap-3">
-                      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3 focus-within:border-violet-soft/70">
+                    <div className="mt-4 flex flex-col gap-3.5">
+                      <div className="rounded-2xl border border-white/15 bg-white/[0.05] p-4 focus-within:border-violet-soft/80 focus-within:bg-white/[0.08] transition-all">
                         <textarea
-                          rows={3}
+                          rows={4}
                           value={answers.featureSuggestion || ''}
                           onChange={(e) => {
                             const val = e.target.value
                             answersRef.current.featureSuggestion = val
                             setAnswers((prev) => ({ ...prev, featureSuggestion: val }))
                           }}
-                          placeholder="e.g. Split UPI bills with flatmates, salary buckets, WhatsApp expense bot..."
-                          className="w-full resize-none border-0 bg-transparent text-[13.5px] text-white outline-none placeholder:text-white/30"
+                          placeholder="e.g. Split UPI bills with flatmates, salary allocation bucket, WhatsApp expense bot..."
+                          className="w-full resize-none border-0 bg-transparent text-[16px] text-white outline-none placeholder:text-white/40 leading-relaxed"
                         />
                       </div>
 
-                      <label className="group flex cursor-pointer select-none items-center gap-2 text-[12px] text-white/60">
+                      <label className="group flex cursor-pointer select-none items-center gap-2.5 text-[12.5px] text-white/70">
                         <span className="relative flex size-4 shrink-0 items-center justify-center rounded border border-white/20 bg-white/[0.06] group-hover:border-violet-soft/60">
                           <input
                             type="checkbox"
@@ -900,10 +882,10 @@ export function OnboardingModal({
                             featureContactConsent: answers.featureContactConsent,
                           })
                         }
-                        className="mt-1 flex h-11 items-center justify-center gap-2 rounded-xl bg-white px-5 text-[13.5px] font-semibold text-black transition-all hover:scale-[1.01] active:scale-[0.98]"
+                        className="mt-2 flex h-13 items-center justify-center gap-2 rounded-2xl bg-white px-6 text-[15px] font-bold text-black transition-all hover:scale-[1.01] hover:bg-white active:scale-[0.98] shadow-[0_6px_24px_rgba(255,255,255,0.22)]"
                       >
                         <span>Finish & Claim VIP Spot</span>
-                        <Sparkle size={14} />
+                        <Sparkle size={15} />
                       </button>
                     </div>
                   </div>
