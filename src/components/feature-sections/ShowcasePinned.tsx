@@ -22,7 +22,6 @@ export function ShowcasePinned() {
 
   const screenIndex = (key: 'home' | 'budget' | 'ai') => SCREEN_LIST.indexOf(SCREENS[key])
   const shown = screenIndex(showcase[active].screen)
-  const ActiveIcon = ICONS[showcase[active].icon]
 
   function scrollToStep(i: number) {
     setActive(i)
@@ -163,73 +162,62 @@ export function ShowcasePinned() {
       </div>
 
       {/* ------------------------------------------------------------- */}
-      {/* MOBILE EXPERIENCE (< lg): Pinned, spacious, synced animation */}
+      {/* MOBILE EXPERIENCE (< lg): Pinned, elevated, synced animation */}
       {/* ------------------------------------------------------------- */}
       <div className="relative block lg:hidden">
-        {/* Sticky viewport pinned with generous top offset and padding */}
+        {/* Sticky viewport pinned with clean clearance */}
         <div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="sticky top-20 sm:top-24 z-10 flex min-h-[calc(100dvh-6rem)] flex-col justify-between pt-6 pb-8 select-none"
+          className="sticky top-14 sm:top-16 z-10 flex h-[calc(100dvh-4rem)] flex-col justify-between pt-1 pb-3 select-none"
         >
-          {/* Top Section: Progress Tracker & Animated Statement */}
-          <div className="flex flex-col items-center text-center px-4 pt-2">
-            {/* Step pill indicator */}
-            <div className="flex items-center gap-2 mb-3">
-              <span className="text-[11px] font-semibold tracking-wider text-violet-soft font-mono">
-                0{active + 1} / 0{showcase.length}
-              </span>
-              <div className="flex items-center gap-1.5 ml-1">
-                {showcase.map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => scrollToStep(i)}
-                    aria-label={`Jump to feature ${i + 1}`}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      i === active
-                        ? 'w-7 bg-violet-soft shadow-[0_0_12px_rgba(167,139,250,0.8)]'
-                        : 'w-2 bg-white/20 hover:bg-white/40'
-                    }`}
-                  />
-                ))}
-              </div>
+          {/* Top Section: Slider Indicator & Animated Statement (Moved up, logo removed) */}
+          <div className="flex flex-col items-center text-center px-4 pt-1">
+            {/* Slider motion indicator without numbers */}
+            <div className="flex items-center justify-center gap-1.5 mb-2">
+              {showcase.map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => scrollToStep(i)}
+                  aria-label={`Jump to feature ${i + 1}`}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    i === active
+                      ? 'w-7 bg-violet-soft shadow-[0_0_12px_rgba(167,139,250,0.8)]'
+                      : 'w-2 bg-white/20 hover:bg-white/40'
+                  }`}
+                />
+              ))}
             </div>
 
-            {/* Active Statement with animated fade-in */}
+            {/* Active Statement text moved up directly under sliders */}
             <div
               key={active}
               className="flex flex-col items-center animate-in fade-in slide-in-from-bottom-2 duration-300"
             >
-              <span
-                aria-hidden="true"
-                className="mb-2.5 grid size-11 place-items-center rounded-full border border-white/20 bg-[radial-gradient(circle_at_30%_30%,rgb(139_92_246/0.5),rgb(20_20_30))] text-amber-200 shadow-[0_0_24px_rgba(139,92,246,0.38)]"
-              >
-                <ActiveIcon size={20} />
-              </span>
-              <h3 className="max-w-[350px] text-[20px] sm:text-[23px] font-semibold leading-tight tracking-tight text-white min-h-[50px] flex items-center justify-center">
+              <h3 className="max-w-[340px] text-[19px] sm:text-[22px] font-semibold leading-tight tracking-tight text-white min-h-[46px] flex items-center justify-center">
                 {showcase[active].title}
               </h3>
             </div>
           </div>
 
-          {/* Center Section: Prominent titanium-frame phone with ambient glow */}
+          {/* Center Section: Elevated titanium-frame phone fully visible in viewport */}
           <div
             data-phone-wrap-mobile
-            className="my-5 flex items-center justify-center px-4 transition-transform duration-500"
+            className="my-auto flex items-center justify-center px-4 transition-transform duration-500"
           >
             <PhoneFrame
               screens={SCREEN_LIST}
               active={shown}
-              width="min(270px, 48vh, 66vw)"
+              width="min(255px, 47vh, 64vw)"
               priority={true}
             />
           </div>
 
-          {/* Bottom Section: Generous padding between phone and exploration hint */}
-          <div className="mt-4 pb-3 flex items-center justify-center gap-2 text-[12px] font-medium text-white/45">
+          {/* Bottom Section: Subtle interaction cue */}
+          <div className="pb-1 flex items-center justify-center gap-1.5 text-[11px] font-medium text-white/40">
             <span>Scroll or swipe to explore</span>
-            <span className="animate-bounce text-[14px]">↓</span>
+            <span className="animate-bounce text-[13px]">↓</span>
           </div>
         </div>
 
