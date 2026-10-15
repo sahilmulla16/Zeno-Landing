@@ -4,7 +4,32 @@
  */
 const env = import.meta.env
 
-const supabaseUrl = (env.VITE_SUPABASE_URL as string | undefined)?.replace(/\/$/, '') ?? ''
+function parseSupabaseUrl(): string {
+  let raw =
+    (env.VITE_SUPABASE_URL as string | undefined)?.trim() ||
+    (env.VITE_SUPABASE_PROJECT_ID as string | undefined)?.trim() ||
+    (env.VITE_PROJECT_ID as string | undefined)?.trim() ||
+    ''
+
+  if (!raw) return ''
+  if (!raw.startsWith('http://') && !raw.startsWith('https://')) {
+    if (raw.includes('.supabase.co')) {
+      raw = `https://${raw}`
+    } else if (!raw.includes('.')) {
+      // Handles if user entered just the project ID
+      raw = `https://${raw}.supabase.co`
+    } else {
+      raw = `https://${raw}`
+    }
+  }
+  return raw.replace(/\/$/, '')
+}
+
+const supabaseUrl = parseSupabaseUrl()
+const supabaseAnonKey =
+  ((env.VITE_SUPABASE_ANON_KEY as string | undefined) ||
+    (env.VITE_ANON_KEY as string | undefined) ||
+    (env.VITE_SUPABASE_PUBLIC_KEY as string | undefined))?.trim() ?? ''
 
 export const site = {
   name: 'Zeno',
@@ -14,7 +39,7 @@ export const site = {
     endpoint:
       (env.VITE_WAITLIST_ENDPOINT as string | undefined) ||
       (supabaseUrl ? `${supabaseUrl}/functions/v1/waitlist-signup` : ''),
-    anonKey: (env.VITE_SUPABASE_ANON_KEY as string | undefined) ?? '',
+    anonKey: supabaseAnonKey,
   },
   support: {
     /** Supabase Edge Function that performs the secure support ticket insert. */
